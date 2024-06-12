@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Media and Internet Speed Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        #results {
+            margin-top: 20px;
+        }
+
+        video {
+            margin-top: 20px;
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+<h1>Media and Internet Speed Test</h1>
+<video id="video" width="640" height="480" autoplay></video>
+<div id="controls">
+    <button id="toggle-video">Toggle Video</button>
+    <button id="toggle-mic">Toggle Mic</button>
+</div>
+<div id="results">
+    <h2>Results</h2>
+    <div id="internet-speed-result"></div>
+    <div id="upload-speed-result"></div>
+    <div id="initial-video-quality-result"></div>
+    <div id="initial-audio-quality-result"></div>
+    <div id="real-time-video-stats"></div>
+    <div id="real-time-audio-stats"></div>
+    <div id="connection-status"></div>
+    <div id="video-status"></div>
+    <div id="mic-status"></div>
+</div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="script.js?cache_bust=<%= Date.now() %>"></script>
+</body>
+</html>
