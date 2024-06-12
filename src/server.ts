@@ -2,11 +2,19 @@ import express from 'express';
 import multer from 'multer';
 import path from 'path';
 import dotenv from 'dotenv';
+import cors from 'cors';
 
 dotenv.config();
 
 const app = express();
 const upload = multer({ dest: 'uploads/' });
+
+const corsOptions = {
+    origin: process.env.CORS_ORIGIN || '*',
+};
+
+// Configure CORS to allow requests from the specified origin
+app.use(cors(corsOptions));
 
 app.use(express.static(path.join(__dirname, '../public')));
 
