@@ -3,6 +3,7 @@ import multer from 'multer';
 import path from 'path';
 import dotenv from 'dotenv';
 import cors from 'cors';
+import ffmpeg from 'fluent-ffmpeg';
 
 dotenv.config();
 
@@ -19,11 +20,51 @@ app.use(cors(corsOptions));
 app.use(express.static(path.join(__dirname, '../public')));
 
 app.post('/upload', upload.single('file'), (req, res) => {
-    res.status(200).send('Upload successful');
+    if (!req.file) {
+        return res.status(400).send('No file uploaded.');
+    }
+
+    const filePath = req.file.path;
+
+    // Analyze video and audio quality using ffmpeg
+    ffmpeg.ffprobe(filePath, (err, metadata) => {
+        if (err) {
+            return res.status(500).send('Error analyzing media file');
+        }
+
+        // Extract relevant information
+        const videoStream = metadata.streams.find(s => s.codec_type === 'video');
+        const audioStream = metadata.streams.find(s => s.codec_type === 'audio');
+
+        const videoQuality = videoStream ? {
+            width: videoStream.width,
+            height: videoStream.height,
+            frameRate: videoStream.r_frame_rate,
+            codec: videoStream.codec_name,
+        } : null;
+
+        const audioQuality = audioStream ? {
+            sampleRate: audioStream.sample_rate,
+            channels: audioStream.channels,
+            codec: audioStream.codec_name,
+        } : null;
+
+        res.status(200).json({
+            videoQuality,
+            audioQuality,
+        });
+    });
 });
 
 app.get('/config', (req, res) => {
-    res.json({ apiEndpoint: process.env.API_ENDPOINT });
+    const videoUploadDuration = process.env.VIDEO_UPLOAD_DURATION || '5';  // Default to 5 seconds if undefined
+    const downloadTestUrl = process.env.DOWNLOAD_TEST_URL || 'https://speed.hetzner.de/100MB.bin';  // Default URL if undefined
+
+    res.json({
+        apiEndpoint: process.env.API_ENDPOINT || '',
+        videoUploadDuration: parseInt(videoUploadDuration, 10),
+        downloadTestUrl: downloadTestUrl
+    });
 });
 
 app.get('/', (req, res) => {
