@@ -28,17 +28,21 @@
 </div>
 <div id="results">
     <h2>Results</h2>
-    <div id="internet-speed-result"></div>
-    <div id="upload-speed-result"></div>
-    <div id="initial-video-quality-result"></div>
-    <div id="initial-audio-quality-result"></div>
-    <div id="real-time-video-stats"></div>
-    <div id="real-time-audio-stats"></div>
-    <div id="connection-status"></div>
-    <div id="video-status"></div>
-    <div id="mic-status"></div>
+    <div id="internet-speed-result"><strong>Download Speed:</strong> Loading...</div>
+    <div id="upload-speed-result"><strong>Upload Speed:</strong> Loading...</div>
+    <div id="initial-video-quality-result"><strong>Video Quality:</strong> Loading...</div>
+    <div id="qualitative-video-result"><strong>Qualitative Evaluation:</strong> Loading...</div>
+    <div id="initial-audio-quality-result"><strong>Audio Quality:</strong> Loading...</div>
+    <div id="qualitative-audio-result"><strong>Qualitative Evaluation:</strong> Loading...</div>
+    <div id="real-time-video-stats"><strong>Webcam transmitting video:</strong> Loading...</div>
+    <div id="real-time-audio-stats"><strong>Microphone Level:</strong> Loading...</div>
+    <div id="connection-status"><strong>Internet Connection:</strong> Loading...</div>
+    <div id="video-status"><strong>Video:</strong> Loading...</div>
+    <div id="mic-status"><strong>Mic:</strong> Loading...</div>
+    <div id="remote-video-stats"><strong>Remote Video Stats:</strong> Loading...</div>
+    <div id="remote-audio-stats"><strong>Remote Audio Stats:</strong> Loading...</div>
 </div>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="script.js?cache_bust=<%= Date.now() %>"></script>
+<script type="module" src="script.js?cache_bust=<%= Date.now() %>"></script>
 </body>
 </html>
