@@ -29,6 +29,7 @@ app.post('/upload', upload.single('file'), (req, res) => {
     // Analyze video and audio quality using ffmpeg
     ffmpeg.ffprobe(filePath, (err, metadata) => {
         if (err) {
+            console.error('Error analyzing media file:', err);
             return res.status(500).send('Error analyzing media file');
         }
 
@@ -49,6 +50,14 @@ app.post('/upload', upload.single('file'), (req, res) => {
             codec: audioStream.codec_name,
         } : null;
 
+        if (!videoQuality) {
+            console.warn('Video quality data is missing');
+        }
+
+        if (!audioQuality) {
+            console.warn('Audio quality data is missing');
+        }
+
         res.status(200).json({
             videoQuality,
             audioQuality,
@@ -57,7 +66,7 @@ app.post('/upload', upload.single('file'), (req, res) => {
 });
 
 app.get('/config', (req, res) => {
-    const videoUploadDuration = process.env.VIDEO_UPLOAD_DURATION || '5';  // Default to 5 seconds if undefined
+    const videoUploadDuration = process.env.VIDEO_UPLOAD_DURATION || '10';  // Default to 10 seconds if undefined
     const downloadTestUrl = process.env.DOWNLOAD_TEST_URL || 'https://speed.hetzner.de/100MB.bin';  // Default URL if undefined
 
     res.json({

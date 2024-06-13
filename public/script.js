@@ -1,7 +1,7 @@
 $(document).ready(function () {
     let videoTrack, audioTrack;
-    let videoUploadDuration = 5;  // Default to 5 seconds
-    let downloadTestUrl = 'https://speed.hetzner.de/100MB.bin';  // Default URL
+    let videoUploadDuration = 5;  // Default to 10 seconds
+    let downloadTestUrl = '';  // Default URL
 
     async function fetchConfig() {
         try {
@@ -125,7 +125,7 @@ $(document).ready(function () {
         const uploadUrl = config.apiEndpoint;
 
         // Capture video for the specified duration and upload it
-        const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+        const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true }); // Ensure audio is included
         const mediaRecorder = new MediaRecorder(stream);
         const chunks = [];
 
@@ -161,19 +161,28 @@ $(document).ready(function () {
 
                 // Analyze quality
                 const analysisResult = await uploadResponse.json();
-                $('#video-quality-analysis').html(`
-                    <strong>Video Quality Analysis:</strong>
-                    Width: ${analysisResult.videoQuality.width}, 
-                    Height: ${analysisResult.videoQuality.height}, 
-                    Frame Rate: ${analysisResult.videoQuality.frameRate}, 
-                    Codec: ${analysisResult.videoQuality.codec}
-                `);
-                $('#audio-quality-analysis').html(`
-                    <strong>Audio Quality Analysis:</strong>
-                    Sample Rate: ${analysisResult.audioQuality.sampleRate}, 
-                    Channels: ${analysisResult.audioQuality.channels}, 
-                    Codec: ${analysisResult.audioQuality.codec}
-                `);
+                if (analysisResult.videoQuality) {
+                    $('#video-quality-analysis').html(`
+                        <strong>Video Quality Analysis:</strong>
+                        Width: ${analysisResult.videoQuality.width}, 
+                        Height: ${analysisResult.videoQuality.height}, 
+                        Frame Rate: ${analysisResult.videoQuality.frameRate}, 
+                        Codec: ${analysisResult.videoQuality.codec}
+                    `);
+                } else {
+                    $('#video-quality-analysis').html(`<strong>Video Quality Analysis:</strong> No video track found`);
+                }
+
+                if (analysisResult.audioQuality) {
+                    $('#audio-quality-analysis').html(`
+                        <strong>Audio Quality Analysis:</strong>
+                        Sample Rate: ${analysisResult.audioQuality.sampleRate}, 
+                        Channels: ${analysisResult.audioQuality.channels}, 
+                        Codec: ${analysisResult.audioQuality.codec}
+                    `);
+                } else {
+                    $('#audio-quality-analysis').html(`<strong>Audio Quality Analysis:</strong> No audio track found`);
+                }
             } catch (error) {
                 $('#upload-speed-result').html(`<strong>Upload Speed Test Failed</strong>`);
                 console.error('Error during upload speed test:', error);
